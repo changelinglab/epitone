@@ -7,25 +7,55 @@ name = "epitone"
 version = "0.1.0"
 description = "G2P libraries for extracting IPA transcriptions with Chao tone marks from orthographic representations"
 readme = "README.md"
-license = {text = "MIT"}
-requires-python = ">=3.8"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    {name = "David R. Mortensen", email = "dmortens@cs.cmu.edu"},
+]
+maintainers = [
+    {name = "David R. Mortensen", email = "dmortens@cs.cmu.edu"},
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Text Processing :: Linguistic",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
 ]
-keywords = ["linguistics", "phonetics", "IPA", "G2P", "Thai", "tone"]
+keywords = [
+    "linguistics",
+    "phonetics", 
+    "phonology",
+    "IPA",
+    "G2P",
+    "grapheme-to-phoneme",
+    "Thai",
+    "Vietnamese",
+    "Yoruba",
+    "Hmong",
+    "Burmese",
+    "Myanmar",
+    "tone",
+    "transcription",
+]
+
+[project.urls]
+Homepage = "https://github.com/changelinglab/epitone"
+Repository = "https://github.com/changelinglab/epitone"
+Issues = "https://github.com/changelinglab/epitone/issues"
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0"]
+dev = ["pytest>=7.0", "build", "twine"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+epitone = ["py.typed"]

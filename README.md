@@ -166,6 +166,59 @@ print(hmong_no_tone.transliterate("kuv"))  # ku
 | -d | ˩˧ (13) | ˩˧ (13) | Low rising |
 | (none) | ˧ (33) | ˧˥ (35) | Mid / Mid rising |
 
+### Burmese
+
+```python
+from epitone import BurmeseG2P
+
+g2p = BurmeseG2P()
+
+# Basic syllables
+print(g2p.transliterate("က"))      # ka˨˩ (simple syllable, low tone)
+print(g2p.transliterate("ခ"))      # kʰa˨˩ (aspirated)
+print(g2p.transliterate("ကား"))    # ka˥˩ (with visarga - high tone)
+
+# Medial consonants
+print(g2p.transliterate("ကျ"))     # kja˨˩ (ya-pin medial)
+print(g2p.transliterate("ကွ"))     # kwa˨˩ (wa-hswe medial)
+print(g2p.transliterate("မှ"))     # mʰa˨˩ (ha-hto aspiration)
+
+# Vowels
+print(g2p.transliterate("ကေ"))     # ke˨˩ (e vowel)
+print(g2p.transliterate("ကိ"))     # ki˨˩ (i vowel)
+print(g2p.transliterate("ကု"))     # ku˨˩ (u vowel)
+
+# Creaky tone with anusvara
+print(g2p.transliterate("ကံ"))     # kã̰˧ (creaky phonation marked)
+
+# Checked syllables (stop coda)
+print(g2p.transliterate("ကပ်"))    # kaʔ˥ (checked tone)
+
+# Myanmar country name
+print(g2p.transliterate("မြန်မာ"))  # mjan˨˩ma˨˩
+
+# Get tokenized output
+tokens = g2p.transliterate_tokenized("က")
+print(tokens)  # ['k', 'a', '˨˩']
+
+# Disable tones
+g2p_no_tone = BurmeseG2P(include_tones=False)
+print(g2p_no_tone.transliterate("ကား"))  # ka
+
+# Disable phonation markers
+g2p_no_phon = BurmeseG2P(include_phonation=False)
+print(g2p_no_phon.transliterate("ကံ"))  # kã˧ (no creaky mark)
+```
+
+#### Burmese Tones
+
+| Tone | Context | Chao Letter |
+|------|---------|-------------|
+| Low | Open syllables | ˨˩ |
+| High | With visarga း | ˥˩ |
+| Creaky | With anusvara ံ | ˧ (+ creaky voice ̰) |
+| Checked | Stop coda | ˥ |
+
 ### Tone Representation
 
 Tones are represented using Chao tone letters (IPA convention):
@@ -234,6 +287,7 @@ assert nfd_equal(result, expected_output)
 - **Vietnamese** - Three dialect varieties (Hanoi, Nghệ An, Sài Gòn)
 - **Yoruba** - Full support with labial-velars, syllabic nasals, and 3-tone system
 - **Hmong** - RPA (White Hmong, Green Hmong) and Dananshan orthographies
+- **Burmese** - Myanmar script with 4-tone system, medials, and phonation
 
 ### Planned
 
