@@ -13,6 +13,8 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Iterator
 
+from epitone.unicode_utils import to_nfd
+
 
 class Dialect(Enum):
     """Vietnamese dialect varieties."""
@@ -499,7 +501,7 @@ class VietnameseG2PBase(ABC):
             text: Vietnamese text to transliterate.
             
         Returns:
-            IPA transcription with Chao tone letters.
+            IPA transcription with Chao tone letters in NFD form.
         """
         result = []
         pos = 0
@@ -524,7 +526,7 @@ class VietnameseG2PBase(ABC):
         if pos < len(text):
             result.append(text[pos:])
         
-        return "".join(result)
+        return to_nfd("".join(result))
     
     def transliterate_tokenized(self, text: str) -> list[str]:
         """Convert Vietnamese text to tokenized IPA segments.
@@ -533,11 +535,11 @@ class VietnameseG2PBase(ABC):
             text: Vietnamese text to transliterate.
             
         Returns:
-            List of IPA tokens (segments and tones).
+            List of IPA tokens (segments and tones) in NFD form.
         """
         tokens = []
         
         for syllable in parse_syllables(text):
             tokens.extend(self._syllable_to_tokens(syllable))
         
-        return tokens
+        return [to_nfd(token) for token in tokens]

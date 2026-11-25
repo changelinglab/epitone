@@ -2,6 +2,8 @@
 
 G2P libraries for extracting IPA transcriptions with Chao tone marks from orthographic representations.
 
+All output is in **Unicode NFD** (Normalized Form Decomposed), ensuring consistent handling of combining characters like tone diacritics, nasalization markers, and tie bars.
+
 ## Installation
 
 ```bash
@@ -73,6 +75,39 @@ print(hanoi_no_tone.transliterate("má"))  # maː
 | hỏi tone | ˧˩˧ (distinct) | ˧˩˨ (merged with ngã) | ˨˩˦ (merged with ngã) |
 | ngã tone | ˧ˀ˥ (distinct) | ˧˩˨ (merged with hỏi) | ˨˩˦ (merged with hỏi) |
 
+### Yoruba
+
+```python
+from epitone import YorubaG2P
+
+g2p = YorubaG2P()
+
+# Convert Yoruba text to IPA
+print(g2p.transliterate("bàbá"))   # ba˨ba˦ (father - low + high tone)
+print(g2p.transliterate("ọmọ"))    # ɔ˧mɔ˧ (child)
+
+# Labial-velar consonants use tie bars
+print(g2p.transliterate("pupa"))   # k͡pu˧k͡pa˧ (red - 'p' is /k͡p/)
+print(g2p.transliterate("gbogbo")) # ɡ͡bo˧ɡ͡bo˧ (all - 'gb' digraph)
+
+# Affricates use tie bars
+print(g2p.transliterate("ẹja"))    # ɛ˧d͡ʒa˧ (fish - 'j' is /d͡ʒ/)
+
+# Syllabic nasals with syllabicity marker
+print(g2p.transliterate("ń lọ"))   # n̩˦ lɔ˧ (I am going)
+
+# Nasal vowels
+print(g2p.transliterate("san"))    # sã˧ (run)
+
+# Get tokenized output
+tokens = g2p.transliterate_tokenized("bá")
+print(tokens)  # ['b', 'a', '˦']
+
+# Disable tones
+g2p_no_tone = YorubaG2P(include_tones=False)
+print(g2p_no_tone.transliterate("bàbá"))  # baba
+```
+
 ### Tone Representation
 
 Tones are represented using Chao tone letters (IPA convention):
@@ -98,16 +133,54 @@ Tones are represented using Chao tone letters (IPA convention):
 | Creaky rising | ngã | ˧ˀ˥ |
 | Heavy | nặng | ˧ˀ˩ |
 
+#### Yoruba Tones
+
+| Tone | Mark | Chao Letter |
+|------|------|-------------|
+| High | á (acute) | ˦ |
+| Mid | a (unmarked) | ˧ |
+| Low | à (grave) | ˨ |
+
+### Yoruba Special Features
+
+- **Labial-velar consonants**: 'p' → /k͡p/, 'gb' → /ɡ͡b/ (with tie bar ͡)
+- **Affricate**: 'j' → /d͡ʒ/ (with tie bar ͡)
+- **Syllabic nasals**: m̩, n̩ with syllabicity marker (̩)
+- **Nasal vowels**: Vn → Ṽ (ã, ɛ̃, ĩ, ɔ̃, ũ)
+- **Open-mid vowels**: ẹ → /ɛ/, ọ → /ɔ/
+
+## Unicode Normalization
+
+All G2P modules output strings in **Unicode NFD** (Normalized Form Decomposed). This means:
+
+- Composite characters are split into base + combining characters
+- `ã` (precomposed) becomes `a` + `̃` (combining tilde)
+- Tie bars like `͡` are combining characters following the first character
+
+For comparison with NFD output, use the provided utilities:
+
+```python
+from epitone import to_nfd, to_nfc, nfd_equal
+
+# Convert to NFD for comparison
+result = g2p.transliterate("san")
+assert to_nfd("ã") in result  # Compare using NFD form
+
+# Or use nfd_equal for direct comparison
+assert nfd_equal(result, expected_output)
+```
+
 ## Supported Languages
 
 - **Thai** - Full support for Thai orthography to IPA conversion with tone marks
 - **Vietnamese** - Three dialect varieties (Hanoi, Nghệ An, Sài Gòn)
+- **Yoruba** - Full support with labial-velars, syllabic nasals, and 3-tone system
 
 ### Planned
 
 - Lao
 - Mixtec varieties
-- West African languages
+- Additional West African languages
 
 ## License
 

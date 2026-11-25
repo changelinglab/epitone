@@ -7,9 +7,10 @@ Build a series of rule-based G2P libraries that covert orthographic representati
 - Each library should have a common interface and share code with the other libraries wherever possible.
 - The libraries should should be efficient and algorithmically sound
 - The code should be structured in a Python package that can easily be uploaded to PyPI and used by end-users.
+- **All output must be in Unicode NFD** (Normalized Form Decomposed) for consistent handling of combining characters
 - They should have the following methods:
-  - `transliterate(text)`: return a string of IPA symbols corresponding 
-  - `transliterate_tokenized(text)`: return a string of tokens corresponding to IPA segments
+  - `transliterate(text)`: return a string of IPA symbols in NFD form
+  - `transliterate_tokenized(text)`: return a list of IPA tokens in NFD form
 
 # Scope
 
@@ -19,6 +20,7 @@ The goal is to produce libraries for
 - Vietnamese ✓ (implemented - Hanoi, Nghệ An, Sài Gòn)
 - Multiple varieties of Mixtec
 - One or more West African languages
+  - Yoruba ✓ (implemented)
 
 ## Thai
 
@@ -64,23 +66,47 @@ The goal is to produce libraries for
   - ˧ˀ˥ (ngã - creaky rising)
   - ˧ˀ˩ (nặng - heavy)
 
+## Yoruba
+
+- Reference: [Yoruba alphabet (Wikipedia)](https://en.wikipedia.org/wiki/Yoruba_alphabet)
+- Based on Latin alphabet with 7 oral vowels and 3 tones
+
+- Key phonological features:
+  - Labial-velar consonants with tie bars: 'p' → /k͡p/, 'gb' → /ɡ͡b/
+  - Affricate: 'j' → /d͡ʒ/ (with tie bar)
+  - Syllabic nasals: m̩, n̩ carrying tone (marked with ̩ U+0329)
+  - Nasal vowels: Vn → Ṽ when n is word-final or before consonant
+  - Open-mid vowels: ẹ → /ɛ/, ọ → /ɔ/
+
+- Tone representation:
+  - ˦ (high - acute accent: á)
+  - ˧ (mid - unmarked: a)
+  - ˨ (low - grave accent: à)
+
+- Syllable structure: Strict (C)V - no codas except nasals creating nasal vowels
+
 # Project Structure
 
 ```
 src/epitone/
-├── __init__.py          # Main exports: ThaiG2P, HanoiG2P, NgheAnG2P, SaiGonG2P
+├── __init__.py          # Main exports: ThaiG2P, HanoiG2P, NgheAnG2P, SaiGonG2P, YorubaG2P
+├── unicode_utils.py     # NFD/NFC normalization utilities (to_nfd, to_nfc, nfd_equal)
 ├── thai/
 │   ├── __init__.py
 │   ├── data.py          # Thai consonants, vowels, tone marks
 │   ├── syllable.py      # Thai syllable parsing
 │   ├── tone.py          # Thai tone determination
 │   └── g2p.py           # ThaiG2P class
-└── vietnamese/
+├── vietnamese/
+│   ├── __init__.py
+│   ├── shared.py        # Shared data and VietnameseG2PBase class
+│   ├── hanoi.py         # HanoiG2P (Northern)
+│   ├── nghe_an.py       # NgheAnG2P (Central)
+│   └── sai_gon.py       # SaiGonG2P (Southern)
+└── yoruba/
     ├── __init__.py
-    ├── shared.py        # Shared data and VietnameseG2PBase class
-    ├── hanoi.py         # HanoiG2P (Northern)
-    ├── nghe_an.py       # NgheAnG2P (Central)
-    └── sai_gon.py       # SaiGonG2P (Southern)
+    ├── data.py          # Yoruba consonants, vowels, tones
+    └── g2p.py           # YorubaG2P class with syllable parsing
 ```
 
 # Development

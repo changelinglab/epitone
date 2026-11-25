@@ -3,6 +3,7 @@
 from epitone.thai.data import TONE_TO_CHAO
 from epitone.thai.syllable import Syllable, parse_syllables
 from epitone.thai.tone import determine_tone, get_tone_chao
+from epitone.unicode_utils import to_nfd
 
 
 class ThaiG2P:
@@ -66,7 +67,7 @@ class ThaiG2P:
             text: Thai text to transliterate.
             
         Returns:
-            IPA transcription with Chao tone letters.
+            IPA transcription with Chao tone letters in NFD form.
         """
         result = []
         pos = 0
@@ -94,7 +95,7 @@ class ThaiG2P:
         if pos < len(text):
             result.append(text[pos:])
 
-        return "".join(result)
+        return to_nfd("".join(result))
 
     def transliterate_tokenized(self, text: str) -> list[str]:
         """Convert Thai text to tokenized IPA segments.
@@ -103,7 +104,7 @@ class ThaiG2P:
             text: Thai text to transliterate.
             
         Returns:
-            List of IPA tokens (segments and tones).
+            List of IPA tokens (segments and tones) in NFD form.
         """
         tokens = []
 
@@ -111,4 +112,4 @@ class ThaiG2P:
             syllable_tokens = self._syllable_to_tokens(syllable)
             tokens.extend(syllable_tokens)
 
-        return tokens
+        return [to_nfd(token) for token in tokens]
