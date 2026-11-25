@@ -108,6 +108,64 @@ g2p_no_tone = YorubaG2P(include_tones=False)
 print(g2p_no_tone.transliterate("bàbá"))  # baba
 ```
 
+### Hmong
+
+Three Hmong converters are available:
+- **HmongDawG2P** - White Hmong (RPA orthography)
+- **MongLengG2P** - Green/Blue Hmong (RPA orthography)
+- **DananshanG2P** - Dananshan Miao (Pinyin-based orthography)
+
+```python
+from epitone import HmongDawG2P, MongLengG2P, DananshanG2P
+
+# White Hmong (Hmong Daw)
+hmong_daw = HmongDawG2P()
+print(hmong_daw.transliterate("kuv"))   # ku˨˦  (I/me)
+print(hmong_daw.transliterate("peb"))   # pe˥   (-b = high tone)
+print(hmong_daw.transliterate("hlub"))  # l̥u˥   (voiceless lateral)
+
+# Green/Blue Hmong (Mong Leng) - different tone values
+mong_leng = MongLengG2P()
+print(mong_leng.transliterate("peb"))   # pe˥˧  (-b = high falling in Mong Leng)
+
+# Nasal vowels (ee, oo, aa)
+print(hmong_daw.transliterate("neeb"))  # nẽ˥   (nasalized /e/)
+print(hmong_daw.transliterate("kaab"))  # kã˥   (nasalized /a/)
+
+# Breathy voice on -g tone (marked on vowel)
+print(hmong_daw.transliterate("pog"))   # pɔ̤˨   (breathy /ɔ/)
+
+# Consonant clusters use standard IPA (no superscripts)
+print(hmong_daw.transliterate("plab"))  # pla˥  (/pl/, not /pˡ/)
+print(hmong_daw.transliterate("ntawv")) # ntaɨ˨˦ (/nt/, not /ⁿt/)
+
+# Dananshan Miao (numeric tones 1-8)
+dananshan = DananshanG2P()
+print(dananshan.transliterate("ba1"))   # pa˦˦  (tone 1)
+print(dananshan.transliterate("ma3"))   # ma˦˧  (tone 3)
+
+# Get tokenized output
+tokens = hmong_daw.transliterate_tokenized("kuv")
+print(tokens)  # ['k', 'u', '˨˦']
+
+# Disable tones
+hmong_no_tone = HmongDawG2P(include_tones=False)
+print(hmong_no_tone.transliterate("kuv"))  # ku
+```
+
+#### Hmong RPA Tone Letters
+
+| Letter | Hmong Daw | Mong Leng | Description |
+|--------|-----------|-----------|-------------|
+| -b | ˥ (55) | ˥˧ (53) | High |
+| -j | ˥˨ (52) | ˥˨ (52) | High falling |
+| -v | ˨˦ (24) | ˨˦ (24) | Mid rising |
+| -s | ˨˩ (21) | ˨˩ (21) | Low |
+| -g | ˨ (22) | ˧ (33) | Breathy (+ breathy voice on vowel) |
+| -m | ˩ (11) | ˩ (11) | Low falling |
+| -d | ˩˧ (13) | ˩˧ (13) | Low rising |
+| (none) | ˧ (33) | ˧˥ (35) | Mid / Mid rising |
+
 ### Tone Representation
 
 Tones are represented using Chao tone letters (IPA convention):
@@ -175,6 +233,7 @@ assert nfd_equal(result, expected_output)
 - **Thai** - Full support for Thai orthography to IPA conversion with tone marks
 - **Vietnamese** - Three dialect varieties (Hanoi, Nghệ An, Sài Gòn)
 - **Yoruba** - Full support with labial-velars, syllabic nasals, and 3-tone system
+- **Hmong** - RPA (White Hmong, Green Hmong) and Dananshan orthographies
 
 ### Planned
 

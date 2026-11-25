@@ -18,6 +18,7 @@ The goal is to produce libraries for
 - Thai ✓ (implemented)
 - Lao
 - Vietnamese ✓ (implemented - Hanoi, Nghệ An, Sài Gòn)
+- Hmong ✓ (implemented - Hmong Daw, Mong Leng via RPA; Dananshan)
 - Multiple varieties of Mixtec
 - One or more West African languages
   - Yoruba ✓ (implemented)
@@ -85,11 +86,55 @@ The goal is to produce libraries for
 
 - Syllable structure: Strict (C)V - no codas except nasals creating nasal vowels
 
+## Hmong
+
+- Reference: [Hmong language (Wikipedia)](https://en.wikipedia.org/wiki/Hmong_language)
+- Two orthography systems supported:
+  - **RPA (Romanized Popular Alphabet)**: For Hmong Daw (White Hmong) and Mong Leng (Green/Blue Hmong)
+  - **Dananshan**: Pinyin-based system used in China
+
+### RPA Orthography
+
+- Tone indicated by final consonant letter (b, j, v, s, g, m, d) or absence
+- Doubled vowels (ee, oo, aa) represent nasalized vowels
+- The -g tone marks breathy phonation on the vowel (marked with ̤ U+0324)
+- Segmental IPA uses standard characters (no superscripts):
+  - Prenasalized consonants: /mp/, /nt/, /ŋk/ (not /ᵐp/, /ⁿt/, /ᵑk/)
+  - Lateral clusters: /pl/, /tl/ (not /pˡ/, /tˡ/)
+
+- Tone representation differs between dialects:
+
+| Letter | Hmong Daw | Mong Leng | Description |
+|--------|-----------|-----------|-------------|
+| -b | ˥ (55) | ˥˧ (53) | High |
+| -j | ˥˨ (52) | ˥˨ (52) | High falling |
+| -v | ˨˦ (24) | ˨˦ (24) | Mid rising |
+| -s | ˨˩ (21) | ˨˩ (21) | Low |
+| -g | ˨ (22) | ˧ (33) | Breathy |
+| -m | ˩ (11) | ˩ (11) | Low falling |
+| -d | ˩˧ (13) | ˩˧ (13) | Low rising |
+| (none) | ˧ (33) | ˧˥ (35) | Mid / Mid rising |
+
+### Dananshan Orthography
+
+- Pinyin-based system with numeric tone markers (1-8)
+- Different consonant-to-IPA mappings than RPA (e.g., b → /p/, p → /pʰ/)
+
+- Tone representation:
+  - 1: ˦˦ (44) high level
+  - 2: ˧˩ (31) mid falling
+  - 3: ˦˧ (43) high-mid falling
+  - 4: ˥˧˥ (535) contour
+  - 5: ˧˧ (33) mid level
+  - 6: ˨˦ (24) low rising
+  - 7: ˧˥ (35) mid rising
+  - 8: ˩˧ (13) low-mid rising
+
 # Project Structure
 
 ```
 src/epitone/
-├── __init__.py          # Main exports: ThaiG2P, HanoiG2P, NgheAnG2P, SaiGonG2P, YorubaG2P
+├── __init__.py          # Main exports: ThaiG2P, Vietnamese*, Yoruba, Hmong*
 ├── unicode_utils.py     # NFD/NFC normalization utilities (to_nfd, to_nfc, nfd_equal)
 ├── thai/
 │   ├── __init__.py
@@ -103,10 +148,15 @@ src/epitone/
 │   ├── hanoi.py         # HanoiG2P (Northern)
 │   ├── nghe_an.py       # NgheAnG2P (Central)
 │   └── sai_gon.py       # SaiGonG2P (Southern)
-└── yoruba/
+├── yoruba/
+│   ├── __init__.py
+│   ├── data.py          # Yoruba consonants, vowels, tones
+│   └── g2p.py           # YorubaG2P class with syllable parsing
+└── hmong/
     ├── __init__.py
-    ├── data.py          # Yoruba consonants, vowels, tones
-    └── g2p.py           # YorubaG2P class with syllable parsing
+    ├── data.py          # Hmong consonants, vowels, tones for RPA and Dananshan
+    ├── rpa.py           # HmongDawG2P and MongLengG2P (RPA orthography)
+    └── dananshan.py     # DananshanG2P (Pinyin-based orthography)
 ```
 
 # Development
