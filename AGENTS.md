@@ -19,6 +19,7 @@ The goal is to produce libraries for
 - Lao
 - Vietnamese ✓ (implemented - Hanoi, Nghệ An, Sài Gòn)
 - Hmong ✓ (implemented - Hmong Daw, Mong Leng via RPA; Dananshan)
+- Burmese ✓ (implemented)
 - Multiple varieties of Mixtec
 - One or more West African languages
   - Yoruba ✓ (implemented)
@@ -130,11 +131,39 @@ The goal is to produce libraries for
   - 7: ˧˥ (35) mid rising
   - 8: ˩˧ (13) low-mid rising
 
+## Burmese
+
+- Reference: [Burmese phonology (Wikipedia)](https://en.wikipedia.org/wiki/Burmese_phonology)
+- Reference: [Burmese alphabet (Wikipedia)](https://en.wikipedia.org/wiki/Burmese_alphabet)
+- Uses Myanmar script with complex syllable structure
+
+- Key phonological features:
+  - 4-tone system with phonation distinctions
+  - Medial consonants: ျ (ya-pin), ြ (ya-yit), ွ (wa-hswe), ှ (ha-hto)
+  - Consonant codas marked with asat (်)
+  - Stacked consonants with virama (္)
+  - Modern spoken Burmese: ရ → /j/, voicing often neutralized
+
+- Tone representation:
+  - ˨˩ (low - open syllables, relatively long)
+  - ˥˩ (high - with visarga း, often tense)
+  - ˧ (creaky - with anusvara ံ, creaky phonation)
+  - ˥ (checked - with stop coda, short)
+
+- Phonation types (marked on vowel):
+  - Modal: default (no mark)
+  - Breathy: ̤ (U+0324) - associated with some contexts
+  - Creaky: ̰ (U+0330) - associated with creaky tone
+
+- Syllable structure: C(medial)(V)(coda)(tone)
+
+- Note: Burmese orthography has many irregularities from historical spellings and Pali/Sanskrit loanwords. This rule-based converter handles standard spellings; lexical lookup is needed for irregular words.
+
 # Project Structure
 
 ```
 src/epitone/
-├── __init__.py          # Main exports: ThaiG2P, Vietnamese*, Yoruba, Hmong*
+├── __init__.py          # Main exports: ThaiG2P, Vietnamese*, Yoruba, Hmong*, BurmeseG2P
 ├── unicode_utils.py     # NFD/NFC normalization utilities (to_nfd, to_nfc, nfd_equal)
 ├── thai/
 │   ├── __init__.py
@@ -152,11 +181,17 @@ src/epitone/
 │   ├── __init__.py
 │   ├── data.py          # Yoruba consonants, vowels, tones
 │   └── g2p.py           # YorubaG2P class with syllable parsing
-└── hmong/
+├── hmong/
+│   ├── __init__.py
+│   ├── data.py          # Hmong consonants, vowels, tones for RPA and Dananshan
+│   ├── rpa.py           # HmongDawG2P and MongLengG2P (RPA orthography)
+│   └── dananshan.py     # DananshanG2P (Pinyin-based orthography)
+└── burmese/
     ├── __init__.py
-    ├── data.py          # Hmong consonants, vowels, tones for RPA and Dananshan
-    ├── rpa.py           # HmongDawG2P and MongLengG2P (RPA orthography)
-    └── dananshan.py     # DananshanG2P (Pinyin-based orthography)
+    ├── data.py          # Burmese consonants, vowels, tones, phonation
+    ├── syllable.py      # Burmese syllable parsing with medials
+    ├── tone.py          # Burmese tone determination and phonation
+    └── g2p.py           # BurmeseG2P class
 ```
 
 # Development

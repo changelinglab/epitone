@@ -3,6 +3,7 @@
 All G2P modules output strings in Unicode NFD (Normalized Form Decomposed).
 """
 
+from epitone.burmese import BurmeseG2P
 from epitone.hmong import DananshanG2P, HmongDawG2P, MongLengG2P
 from epitone.thai import ThaiG2P
 from epitone.unicode_utils import nfd_equal, to_nfc, to_nfd
@@ -19,6 +20,7 @@ __all__ = [
     "HmongDawG2P",
     "MongLengG2P",
     "DananshanG2P",
+    "BurmeseG2P",
     "to_nfd",
     "to_nfc",
     "nfd_equal",
