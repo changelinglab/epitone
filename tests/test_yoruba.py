@@ -1,5 +1,7 @@
 """Tests for Yoruba G2P converter."""
 
+import unicodedata
+
 import pytest
 
 from epitone.yoruba import YorubaG2P
@@ -19,6 +21,11 @@ from epitone.yoruba.data import (
     get_consonant_ipa,
     get_vowel_ipa,
 )
+
+
+def nfd(text: str) -> str:
+    """Normalize text to NFD for comparison with G2P output."""
+    return unicodedata.normalize("NFD", text)
 
 
 class TestYorubaData:
@@ -224,12 +231,12 @@ class TestYorubaG2P:
     def test_nasal_vowel_word_final(self, g2p):
         """Test nasal vowel at word end (Vn)."""
         result = g2p.transliterate("san")  # Nasal 'a'
-        assert "ã" in result
+        assert nfd("ã") in result  # NFD: a + combining tilde
 
     def test_nasal_vowel_before_consonant(self, g2p):
         """Test nasal vowel before consonant."""
         result = g2p.transliterate("sàn")
-        assert "ã" in result
+        assert nfd("ã") in result  # NFD: a + combining tilde
         assert "˨" in result  # Low tone preserved
 
     def test_vowel_only_syllable(self, g2p):

@@ -2,6 +2,8 @@
 
 G2P libraries for extracting IPA transcriptions with Chao tone marks from orthographic representations.
 
+All output is in **Unicode NFD** (Normalized Form Decomposed), ensuring consistent handling of combining characters like tone diacritics, nasalization markers, and tie bars.
+
 ## Installation
 
 ```bash
@@ -146,6 +148,27 @@ Tones are represented using Chao tone letters (IPA convention):
 - **Syllabic nasals**: m̩, n̩ with syllabicity marker (̩)
 - **Nasal vowels**: Vn → Ṽ (ã, ɛ̃, ĩ, ɔ̃, ũ)
 - **Open-mid vowels**: ẹ → /ɛ/, ọ → /ɔ/
+
+## Unicode Normalization
+
+All G2P modules output strings in **Unicode NFD** (Normalized Form Decomposed). This means:
+
+- Composite characters are split into base + combining characters
+- `ã` (precomposed) becomes `a` + `̃` (combining tilde)
+- Tie bars like `͡` are combining characters following the first character
+
+For comparison with NFD output, use the provided utilities:
+
+```python
+from epitone import to_nfd, to_nfc, nfd_equal
+
+# Convert to NFD for comparison
+result = g2p.transliterate("san")
+assert to_nfd("ã") in result  # Compare using NFD form
+
+# Or use nfd_equal for direct comparison
+assert nfd_equal(result, expected_output)
+```
 
 ## Supported Languages
 

@@ -10,6 +10,7 @@ import unicodedata
 from dataclasses import dataclass
 from typing import Iterator
 
+from epitone.unicode_utils import to_nfd
 from epitone.yoruba.data import (
     ALL_CONSONANTS,
     ALL_VOWELS,
@@ -307,7 +308,7 @@ class YorubaG2P:
             text: Yoruba text to transliterate.
             
         Returns:
-            IPA transcription with Chao tone letters.
+            IPA transcription with Chao tone letters in NFD form.
         """
         result = []
         pos = 0
@@ -338,7 +339,7 @@ class YorubaG2P:
             result.append(ipa)
             pos = new_pos
         
-        return "".join(result)
+        return to_nfd("".join(result))
     
     def transliterate_tokenized(self, text: str) -> list[str]:
         """Convert Yoruba text to tokenized IPA segments.
@@ -347,11 +348,11 @@ class YorubaG2P:
             text: Yoruba text to transliterate.
             
         Returns:
-            List of IPA tokens (segments and tones).
+            List of IPA tokens (segments and tones) in NFD form.
         """
         tokens = []
         
         for syllable in parse_syllables(text):
             tokens.extend(self._syllable_to_tokens(syllable))
         
-        return tokens
+        return [to_nfd(token) for token in tokens]

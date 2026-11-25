@@ -7,9 +7,10 @@ Build a series of rule-based G2P libraries that covert orthographic representati
 - Each library should have a common interface and share code with the other libraries wherever possible.
 - The libraries should should be efficient and algorithmically sound
 - The code should be structured in a Python package that can easily be uploaded to PyPI and used by end-users.
+- **All output must be in Unicode NFD** (Normalized Form Decomposed) for consistent handling of combining characters
 - They should have the following methods:
-  - `transliterate(text)`: return a string of IPA symbols corresponding 
-  - `transliterate_tokenized(text)`: return a string of tokens corresponding to IPA segments
+  - `transliterate(text)`: return a string of IPA symbols in NFD form
+  - `transliterate_tokenized(text)`: return a list of IPA tokens in NFD form
 
 # Scope
 
@@ -89,6 +90,7 @@ The goal is to produce libraries for
 ```
 src/epitone/
 ├── __init__.py          # Main exports: ThaiG2P, HanoiG2P, NgheAnG2P, SaiGonG2P, YorubaG2P
+├── unicode_utils.py     # NFD/NFC normalization utilities (to_nfd, to_nfc, nfd_equal)
 ├── thai/
 │   ├── __init__.py
 │   ├── data.py          # Thai consonants, vowels, tone marks
