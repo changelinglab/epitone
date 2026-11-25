@@ -19,6 +19,7 @@ The goal is to produce libraries for
 - Vietnamese ✓ (implemented - Hanoi, Nghệ An, Sài Gòn)
 - Multiple varieties of Mixtec
 - One or more West African languages
+  - Yoruba ✓ (implemented)
 
 ## Thai
 
@@ -64,23 +65,46 @@ The goal is to produce libraries for
   - ˧ˀ˥ (ngã - creaky rising)
   - ˧ˀ˩ (nặng - heavy)
 
+## Yoruba
+
+- Reference: [Yoruba alphabet (Wikipedia)](https://en.wikipedia.org/wiki/Yoruba_alphabet)
+- Based on Latin alphabet with 7 oral vowels and 3 tones
+
+- Key phonological features:
+  - Labial-velar consonants with tie bars: 'p' → /k͡p/, 'gb' → /ɡ͡b/
+  - Affricate: 'j' → /d͡ʒ/ (with tie bar)
+  - Syllabic nasals: m̩, n̩ carrying tone (marked with ̩ U+0329)
+  - Nasal vowels: Vn → Ṽ when n is word-final or before consonant
+  - Open-mid vowels: ẹ → /ɛ/, ọ → /ɔ/
+
+- Tone representation:
+  - ˦ (high - acute accent: á)
+  - ˧ (mid - unmarked: a)
+  - ˨ (low - grave accent: à)
+
+- Syllable structure: Strict (C)V - no codas except nasals creating nasal vowels
+
 # Project Structure
 
 ```
 src/epitone/
-├── __init__.py          # Main exports: ThaiG2P, HanoiG2P, NgheAnG2P, SaiGonG2P
+├── __init__.py          # Main exports: ThaiG2P, HanoiG2P, NgheAnG2P, SaiGonG2P, YorubaG2P
 ├── thai/
 │   ├── __init__.py
 │   ├── data.py          # Thai consonants, vowels, tone marks
 │   ├── syllable.py      # Thai syllable parsing
 │   ├── tone.py          # Thai tone determination
 │   └── g2p.py           # ThaiG2P class
-└── vietnamese/
+├── vietnamese/
+│   ├── __init__.py
+│   ├── shared.py        # Shared data and VietnameseG2PBase class
+│   ├── hanoi.py         # HanoiG2P (Northern)
+│   ├── nghe_an.py       # NgheAnG2P (Central)
+│   └── sai_gon.py       # SaiGonG2P (Southern)
+└── yoruba/
     ├── __init__.py
-    ├── shared.py        # Shared data and VietnameseG2PBase class
-    ├── hanoi.py         # HanoiG2P (Northern)
-    ├── nghe_an.py       # NgheAnG2P (Central)
-    └── sai_gon.py       # SaiGonG2P (Southern)
+    ├── data.py          # Yoruba consonants, vowels, tones
+    └── g2p.py           # YorubaG2P class with syllable parsing
 ```
 
 # Development
